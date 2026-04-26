@@ -206,7 +206,11 @@ function setupAnalyser(analyser) {
 
 async function ensureAudioContext() {
   if (audioContext) return audioContext;
-  audioContext = new AudioContext();
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) {
+    throw new Error("This browser does not support Web Audio. Try Safari 14+, Chrome, Edge, or Firefox.");
+  }
+  audioContext = new AudioContextClass();
   masterGain = audioContext.createGain();
   masterGain.gain.value = 0.82;
   masterAnalyser = audioContext.createAnalyser();
@@ -215,6 +219,21 @@ async function ensureAudioContext() {
   masterGain.connect(masterAnalyser);
   masterAnalyser.connect(audioContext.destination);
   return audioContext;
+}
+
+function decodeAudioDataCompat(ctxAudio, arrayBuffer) {
+  return new Promise((resolve, reject) => {
+    const copy = arrayBuffer.slice(0);
+    const promise = ctxAudio.decodeAudioData(
+      copy,
+      (buffer) => resolve(buffer),
+      (error) => reject(error || new Error("decodeAudioData failed")),
+    );
+
+    if (promise && typeof promise.then === "function") {
+      promise.then(resolve).catch(reject);
+    }
+  });
 }
 
 async function loadAudioFiles(files) {
@@ -232,9 +251,9 @@ async function loadAudioFiles(files) {
       const arrayBuffer = await file.arrayBuffer();
       let buffer;
       try {
-        buffer = await ctxAudio.decodeAudioData(arrayBuffer.slice(0));
+        buffer = await decodeAudioDataCompat(ctxAudio, arrayBuffer);
       } catch (error) {
-        throw new Error(`Could not decode ${file.name}. Try PCM WAV, AIFF, MP3, M4A, FLAC, or OGG. ${error.message || error}`);
+        throw new Error(`Could not decode ${file.name}. Safari works best with PCM WAV, AIFF, MP3, or M4A/AAC. ${error.message || error}`);
       }
       return createAudioTrack(file.name.replace(/\.[^/.]+$/, ""), buffer, index);
     }),

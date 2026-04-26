@@ -135,6 +135,146 @@
       </footer>
     </main>
 
+    <script src="./app.js?v=opaque-fill2"></script>
+  </body>
+</html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spectral Map Prototype</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="mark"></span>
+          <div>
+            <h1>Spectral Map</h1>
+            <p>Live moment compare</p>
+          </div>
+        </div>
+      </header>
+
+      <section class="workspace">
+        <section class="compare-stage">
+          <section class="analyzer">
+            <div class="graph-mode">Spectrum Now · SPAN-style slope · Frequency, Not Timeline</div>
+            <div class="time-readout">
+              <strong id="timeReadout">Mock signal</strong>
+              <span id="windowReadout">Realtime FFT window</span>
+            </div>
+            <canvas id="spectrumCanvas"></canvas>
+            <div id="cursorReadout" class="cursor-readout is-hidden">
+              <strong>1.2 kHz</strong>
+              <span>-18.4 dB</span>
+            </div>
+            <div class="frequency-strip">
+              <span>20</span>
+              <span>50</span>
+              <span>100</span>
+              <span>200</span>
+              <span>500</span>
+              <span>1k</span>
+              <span>2k</span>
+              <span>5k</span>
+              <span>10k</span>
+              <span>20k</span>
+            </div>
+          </section>
+
+          <aside class="track-panel" aria-label="Tracks">
+            <div class="panel-head">
+              <span>Compare lanes</span>
+              <button id="resetFocus" class="icon-button" title="Show all tracks">All</button>
+            </div>
+            <div id="trackList" class="track-list"></div>
+          </aside>
+        </section>
+
+        <aside class="inspector" aria-label="Inspector">
+          <div class="panel-head">
+            <span>Detection</span>
+          </div>
+          <div class="control-block">
+            <label for="smooth">Smoothing</label>
+            <input id="smooth" type="range" min="0.06" max="0.36" value="0.18" step="0.01" />
+          </div>
+          <div class="control-block">
+            <label for="decay">Decay</label>
+            <input id="decay" type="range" min="0.82" max="0.98" value="0.92" step="0.01" />
+          </div>
+          <div class="control-block">
+            <label for="threshold">Conflict threshold</label>
+            <input id="threshold" type="range" min="-54" max="-18" value="-38" step="1" />
+          </div>
+          <div class="control-block">
+            <label for="spectrumSlope">Spectrum slope</label>
+            <input id="spectrumSlope" type="range" min="0" max="6" value="4.5" step="0.1" />
+          </div>
+
+          <div class="panel-head visual-head">
+            <span>Wave UI</span>
+            <button id="resetVisuals" class="icon-button" title="Reset wave style">Reset</button>
+          </div>
+          <div class="control-block">
+            <label for="waveAmp">Amplitude</label>
+            <input id="waveAmp" type="range" min="0.65" max="1.75" value="1" step="0.05" />
+          </div>
+          <div class="control-block">
+            <label for="waveGlow">Glow</label>
+            <input id="waveGlow" type="range" min="0" max="32" value="14" step="1" />
+          </div>
+          <div class="control-block">
+            <label for="waveFill">Fill alpha</label>
+            <input id="waveFill" type="range" min="0" max="100" value="55" step="1" />
+          </div>
+          <div class="control-block">
+            <label for="waveGradient">Gradient</label>
+            <input id="waveGradient" type="range" min="0" max="100" value="68" step="1" />
+          </div>
+          <div class="control-block">
+            <label for="waveWidth">Line width</label>
+            <input id="waveWidth" type="range" min="0.8" max="3.6" value="1.6" step="0.1" />
+          </div>
+          <div class="control-block">
+            <label for="waveDim">Inactive dim</label>
+            <input id="waveDim" type="range" min="0.08" max="0.58" value="0.26" step="0.02" />
+          </div>
+          <div class="control-block">
+            <label for="waveHue">Color shift</label>
+            <input id="waveHue" type="range" min="-80" max="80" value="0" step="1" />
+          </div>
+        </aside>
+      </section>
+
+      <footer class="transport">
+        <div class="transport-main">
+          <div class="status">
+            <span class="dot"></span>
+            <span id="audioStatus">Mock 4-track compare running</span>
+            <span id="timelineStatus">No audio loaded</span>
+          </div>
+          <div class="scrubber">
+            <span id="scrubCurrent">0:00.0</span>
+            <input id="timelineScrub" type="range" min="0" max="1000" value="0" step="1" disabled />
+            <span id="scrubDuration">0:00.0</span>
+          </div>
+        </div>
+        <div class="mini-controls">
+          <input id="audioFiles" class="native-file-input" type="file" accept="audio/*,.wav,.wave,.aif,.aiff,.mp3,.m4a,.flac,.ogg" multiple />
+          <button class="transport-button" id="demoButton">Demo Audio</button>
+          <button class="transport-button" id="playButton">Play</button>
+          <button class="transport-button" id="restartButton">Restart</button>
+          <button class="transport-button" id="freezeButton">Pause</button>
+          <button class="transport-button" id="snapshotButton">Snapshot</button>
+          <button class="transport-button" id="heatmapButton">Heatmap</button>
+        </div>
+      </footer>
+    </main>
+
     <script src="./app.js"></script>
   </body>
 </html>
